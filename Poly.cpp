@@ -10,7 +10,7 @@ Poly::Poly()
 }
 
 Poly::Poly(const std::vector<int>& deg, const std::vector<double>& coeff)
-{
+{//
 	// TODO	
 	//creates a singly linked list (using the polynode class)
 	//the degree elements are in increasing order so no checking required
