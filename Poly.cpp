@@ -2,7 +2,7 @@
 
 Poly::Poly()
 {
-	// TODO	
+	// u r a genius
 }
 
 Poly::Poly(const std::vector<int>& deg, const std::vector<double>& coeff)
