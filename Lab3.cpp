@@ -4,6 +4,7 @@ using namespace std;
 
 int main()
 {
+    //no, ur a genius
 	int max_degree = 1000;
 	double max_coeff = 100;
 	int max_eval_degree = 20;
