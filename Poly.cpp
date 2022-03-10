@@ -17,24 +17,20 @@ Poly::Poly(const std::vector<int>& deg, const std::vector<double>& coeff)
 	// TODO	
 	//creates a singly linked list (using the polynode class)
 	this->head = new PolyNode(NULL, NULL, NULL);
+	this->deg = -1;
 
 	//the degree elements are in increasing order so no checking required
 	int counter = 1;
-	//step 1 create a for loop that runs for the size of deg vector
+
+	//for loop that runs for the size of vector
 	for (int i = 0; i < deg.size(); i++) {
-		//step 2 in each iteration in the loop: create a new node in the LL
+		//create a new node in the SLL
 		addMono(deg[i], coeff[i]);
 		
-		std::cout << std::to_string(counter++);
 	}
-	std::cout << std::endl << std::to_string(counter++);
 
-	//this->head = new PolyNode(NULL, NULL, newNode);
+	deleteZeroMono();
 
-	//in each node set the d to the ith degree element, and the c to the ith coefficient
-	//set the "next PolyNode ptr" to a new polyNode
-	//in the new PNode, point it to null
-	//by the end each PNode will point to the next node except the tail will point to null
 }
 
 Poly::~Poly()
@@ -52,7 +48,6 @@ Poly::~Poly()
 		free(tmp);
 	}
 
-	//free(this);
 }
 
 void Poly::addMono(int i, double c)
@@ -75,6 +70,7 @@ void Poly::addMono(int i, double c)
 		current->next = newNode;
 		if (this->getDegree() < i) { this->deg = i; }
 		this->numTerms++;
+		deleteZeroMono();
 		return;
 	}
 	if (current->next->deg != i) {
@@ -82,28 +78,57 @@ void Poly::addMono(int i, double c)
 		current->next = newNode;
 		if (this->getDegree() < i) { this->deg = i; }
 		this->numTerms++;
+		deleteZeroMono();
 		return;
 	}
 	//add to existing term
 	else if (current->next->deg == i) {
 		current->next->coeff += c;
+		deleteZeroMono();
 		return;
 	}
 
+
+
+
+}
+
+void Poly::deleteZeroMono() {
+	//check to see if mononomial coeff is non-zero
+	//while loop to loop through the SLL
+	PolyNode* currentNode = this->getHead();
+
+	//condition: next ptr != NULL, and the deg is still bigger than the current deg of the node
+	while (currentNode->next != NULL) {
+		if (currentNode->next->coeff == 0) {
+			PolyNode* tmp = currentNode->next->next;
+			delete(currentNode->next);
+			currentNode->next = tmp;
+		}
+		currentNode = currentNode->next;
+		//std::cout << std::to_string(currentNode->coeff) << std::endl;
+		}
+
+	
 
 }
 
 void Poly::addPoly(const Poly& p)
 {
 	// TODO
-
-
-	//Double while loop to loop through poly p for each mononomial in this polynomial
+	Poly passed = p;
+	PolyNode pHead = *passed.getHead();
+	
+	//while loop to loop through poly p for each mononomial in this polynomial
 	//1st condition: next ptr != NULL(to run through Poly p)
-		//2nd condition: next ptr != NULL, and the deg of the ith node in poly P is still bigger than the jth node in this
-			//if the degree is equal, add the coeff
-			// if the degree is smaller, insert the polynomial after the jth node
-
+	while (pHead.next!=NULL) {
+		double c = pHead.coeff;
+		int d = pHead.deg;
+		passed.addMono(c,d);
+		pHead = *pHead.next;
+		
+	}
+		
 
 }
 
@@ -182,10 +207,19 @@ std::string Poly::toString()
 {
 	// TODO
 	// create starter string and set it to degree = get degree
+	std::string answer = "degree = " + std::to_string(this->getDegree()) + "; ";
+	
 	// loop throgh LL to add the mononomial
-	// 
+	PolyNode currentNode = *this->getHead();
+
+	//condition: next ptr != NULL
+	while (currentNode.next != NULL) {
+		answer = answer + "a(" + std::to_string(currentNode.next->deg)+ ") = "+ std::to_string(currentNode.next->coeff) + ";  ";
+		currentNode = *(currentNode.next);
+		//std::cout << std::to_string(currentNode->coeff) << std::endl;
+	}
 
 	//Example: If this polynomial is P(X) = 4X3 + 5X + 2, then the string representation could be :
 	//“degree = 3; a(3) = 4.0; a(1) = 5.0; a(0) = 2.0"
-	return "";//change this after completing this function
+	return answer;//change this after completing this function
 }

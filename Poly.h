@@ -28,6 +28,10 @@ public:
 	double evaluate(double x);
 	std::string toString();
 	
+	void deleteZeroMono();
+
+
+
 	// used for testing
 	PolyNode* getHead() {
 		return head;
