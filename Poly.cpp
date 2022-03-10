@@ -62,27 +62,31 @@ void Poly::addMono(int i, double c)
 	if (c == 0) { return; }
 
 	//while loop to loop through the SLL
-	PolyNode current = *this->getHead();
+	PolyNode* current = this->getHead();
 
 	//condition: next ptr != NULL, and the deg is still bigger than the current deg of the node
-	while (current.next != NULL && current.next->deg > i) {
-		current = *current.next;
+	while (current->next != NULL && current->next->deg > i) {
+		current = current->next;
 	}
 
 	//new node/mononomial
-	if (current.next == NULL) {
-		PolyNode newNode = PolyNode(i, c, current.next);
-		current.next = &newNode;
+	if (current->next == NULL) {
+		PolyNode* newNode = new PolyNode(i, c, current->next);
+		current->next = newNode;
+		if (this->getDegree() < i) { this->deg = i; }
+		this->numTerms++;
 		return;
 	}
-	if (current.next->deg != i) {
-		PolyNode newNode = PolyNode(i, c, current.next);
-		current.next = &newNode;
+	if (current->next->deg != i) {
+		PolyNode* newNode = new PolyNode(i, c, current->next);
+		current->next = newNode;
+		if (this->getDegree() < i) { this->deg = i; }
+		this->numTerms++;
 		return;
 	}
 	//add to existing term
-	else if (current.next->deg == i) {
-		current.next->coeff += c;
+	else if (current->next->deg == i) {
+		current->next->coeff += c;
 		return;
 	}
 
