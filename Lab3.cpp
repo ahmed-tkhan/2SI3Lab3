@@ -11,7 +11,7 @@ int main()
 	double max_eval_coeff = 10;
 	int max_run = 50;
 	vector<int> max_size_array = { 1, 5, 10 };
-    //
+    
     double fullMark = 0;
     double totalMark = 0;
 

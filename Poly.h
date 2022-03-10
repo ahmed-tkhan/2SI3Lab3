@@ -27,7 +27,7 @@ public:
 	int getTermsNo();
 	double evaluate(double x);
 	std::string toString();
-	//
+	
 	// used for testing
 	PolyNode* getHead() {
 		return head;

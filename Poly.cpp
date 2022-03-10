@@ -1,4 +1,6 @@
 #include "Poly.h"
+#include <iostream>
+
 
 Poly::Poly()
 {
@@ -6,18 +8,28 @@ Poly::Poly()
 	//set degree to -1
 	this->deg = -1;
 	//create the zero polynomial
+	head = new PolyNode(NULL, NULL, NULL);
 
 }
 
 Poly::Poly(const std::vector<int>& deg, const std::vector<double>& coeff)
-{//
+{
 	// TODO	
 	//creates a singly linked list (using the polynode class)
-	//the degree elements are in increasing order so no checking required
-	
-	//step 1 create a for loop that runs for the size of deg vector
+	this->head = new PolyNode(NULL, NULL, NULL);
 
-	//step 2 in each iteration in the loop: create a new node in the LL
+	//the degree elements are in increasing order so no checking required
+	int counter = 1;
+	//step 1 create a for loop that runs for the size of deg vector
+	for (int i = 0; i < deg.size(); i++) {
+		//step 2 in each iteration in the loop: create a new node in the LL
+		addMono(deg[i], coeff[i]);
+		
+		std::cout << std::to_string(counter++);
+	}
+	std::cout << std::endl << std::to_string(counter++);
+
+	//this->head = new PolyNode(NULL, NULL, newNode);
 
 	//in each node set the d to the ith degree element, and the c to the ith coefficient
 	//set the "next PolyNode ptr" to a new polyNode
@@ -29,17 +41,51 @@ Poly::~Poly()
 {
 	// TODO
 	// reach out to a buddy and check again how to delete a SLL or delete a polyNode
+	PolyNode* tmp;
+	PolyNode* nodeHead = this->head;
+
+
+	while (nodeHead != NULL)
+	{
+		tmp = nodeHead;
+		nodeHead = nodeHead->next;
+		free(tmp);
+	}
+
+	//free(this);
 }
 
 void Poly::addMono(int i, double c)
 {
-	// TODO
-	// 
-	// 
+
 	//if coeff == 0, exit
+	if (c == 0) { return; }
 
 	//while loop to loop through the SLL
+	PolyNode current = *this->getHead();
+
 	//condition: next ptr != NULL, and the deg is still bigger than the current deg of the node
+	while (current.next != NULL && current.next->deg > i) {
+		current = *current.next;
+	}
+
+	//new node/mononomial
+	if (current.next == NULL) {
+		PolyNode newNode = PolyNode(i, c, current.next);
+		current.next = &newNode;
+		return;
+	}
+	if (current.next->deg != i) {
+		PolyNode newNode = PolyNode(i, c, current.next);
+		current.next = &newNode;
+		return;
+	}
+	//add to existing term
+	else if (current.next->deg == i) {
+		current.next->coeff += c;
+		return;
+	}
+
 
 }
 
