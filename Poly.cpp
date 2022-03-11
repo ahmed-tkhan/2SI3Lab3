@@ -224,19 +224,20 @@ double Poly::evaluate(double x)
 	// TODO
 
 	
-	double total = 0;
+	
 	PolyNode* head = this->head->next;
+	double total = 0;
 
-	while (head != NULL) {
+	do {
 		total += head->coeff * pow(x, head->deg);
 		head = head->next;
-
 	}
+	while (head != NULL)
 	
 	//Example: If this polynomial is P (X) = 4X3 + 5X + 2, then the invocation
 	//evaluate(2.0) returns the value 4 * 2.03 + 5 * 2.0 + 2 = 44.0
 
-	return -1;//change this after completing this function
+	return total;
 }
 
 std::string Poly::toString()
