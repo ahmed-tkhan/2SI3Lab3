@@ -8,7 +8,7 @@ Poly::Poly()
 	//set degree to -1
 	this->deg = -1;
 	//create the zero polynomial
-	PolyNode* newNode = new PolyNode(NULL, NULL, NULL);
+	PolyNode* newNode = new PolyNode(-1, NULL, NULL);
 	this->head = newNode;
 }
 
@@ -16,7 +16,7 @@ Poly::Poly(const std::vector<int>& deg, const std::vector<double>& coeff)
 {
 	// TODO	
 	//creates a singly linked list (using the polynode class)
-	PolyNode* newNode = new PolyNode(NULL, NULL, NULL);
+	PolyNode* newNode = new PolyNode(-1, NULL, NULL);
 	this->head = newNode;
 	this->deg = -1;
 
@@ -38,20 +38,20 @@ Poly::~Poly()
 {
 	// TODO
 	// reach out to a buddy and check again how to delete a SLL or delete a polyNode
-	PolyNode* nodeHead = this->head;
+	PolyNode* nodeHead = this->getHead();
 	PolyNode* temp;
+	PolyNode* freedMem = new PolyNode(NULL,NULL,NULL);
+	free(freedMem);
 
 
-	while (nodeHead->next != NULL)
+	while (nodeHead != NULL && nodeHead->next != freedMem->next)
 	{
-		try {
-			temp = nodeHead;
-			nodeHead = nodeHead->next;
-			if (temp != NULL) { free(temp); }
-		}
-		catch (std::exception e) {
-			std::cout << e.what() << std::endl;
-		}
+		
+		temp = nodeHead;
+		nodeHead = nodeHead->next;
+		free(temp);
+		
+			 
 		
 	}
 
@@ -74,7 +74,7 @@ void Poly::addMono(int i, double c)
 	//new node/mononomial
 	if (current->next == NULL) {
 		//create new mononomial
-		PolyNode* newNode = new PolyNode(i, c, current->next);
+		PolyNode* newNode = new PolyNode(i, c, NULL);
 		//add to list
 		current->next = newNode;
 	}
@@ -107,7 +107,7 @@ void Poly::deleteZeroMono() {
 		if (currentNode->next->coeff == 0) {
 			
 			PolyNode* tmp = currentNode->next->next;
-			delete(currentNode->next);
+			free(currentNode->next);
 			currentNode->next = tmp;
 			//decrement number of terms by 1
 			this->numTerms--;
@@ -138,7 +138,7 @@ void Poly::addPoly(const Poly& p)
 
 	update();
 	
-
+	return;
 }
 
 void Poly::multiplyMono(int i, double c)
@@ -148,15 +148,19 @@ void Poly::multiplyMono(int i, double c)
 	//if the c is 0, delete all nodes in this poly and exit
 	if (c == 0) {
 		PolyNode* tmp;
-		PolyNode* nodeHead = this->head;
+		PolyNode* nodeHead = this->getHead();
 
 
-		while (nodeHead != NULL)
+		while (nodeHead->next != NULL)
 		{
-			tmp = nodeHead;
-			nodeHead = nodeHead->next;
+			tmp = nodeHead->next;
+			nodeHead->next = nodeHead->next->next;
 			free(tmp);
 		}
+		
+		update();
+
+		return;
 	}
 	// while loop to loop through this poly 
 	// condition: next ptr != NULL(to run through this Poly)
@@ -164,21 +168,16 @@ void Poly::multiplyMono(int i, double c)
 	while (currentNode->next != NULL) {
 		currentNode->next->coeff = (currentNode->next->coeff) * c;
 		currentNode->next->deg = (currentNode->next->deg) + i;
+		currentNode = currentNode->next;
 	}
-
-
-	
-	
+	update();
 
 }
 
 void Poly::multiplyPoly(const Poly& p)
 {
 	// TODO
-	// 
-	// inefficient in both time and space:
-	// ---------------------------------------------------------------
-	// 
+
  	// While loop to create the vector/array of duplicate polynomials of poly P
 	// 
 	// While loop to run through each node in this polynomial
