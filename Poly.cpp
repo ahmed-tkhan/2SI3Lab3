@@ -170,7 +170,7 @@ void Poly::multiplyPoly(const Poly& p)
 		thisCopy->duplicate(*thisCopyCopy);							//n
 		thisCopyCopy->multiplyMono(d, c);							//n
 		//add the products of the mononomials and the polynomials
-		this->addPoly(*thisCopyCopy);								//n*m
+		this->addPoly(*thisCopyCopy);								//n^2*m
 		//next node
 		pHead = pHead->next;
 	}
