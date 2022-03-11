@@ -135,12 +135,31 @@ void Poly::addPoly(const Poly& p)
 void Poly::multiplyMono(int i, double c)
 {
 	// TODO
-
+	PolyNode* currentNode = this->getHead();
 	//if the c is 0, delete all nodes in this poly and exit
-	
+	if (c == 0) {
+		PolyNode* tmp;
+		PolyNode* nodeHead = this->head;
+
+
+		while (nodeHead != NULL)
+		{
+			tmp = nodeHead;
+			nodeHead = nodeHead->next;
+			free(tmp);
+		}
+	}
 	// while loop to loop through this poly 
 	// condition: next ptr != NULL(to run through this Poly)
 	//multiply each node's coeff by c, and add i to the degree
+	while (currentNode->next != NULL) {
+		currentNode->next->coeff = (currentNode->next->coeff) * c;
+		currentNode->next->deg = (currentNode->next->deg) + i;
+	}
+
+
+	
+	
 
 }
 
@@ -168,7 +187,8 @@ void Poly::duplicate(Poly& outputPoly)
 {
 	// TODO
 
-	// use a for loop using the get terms function to loop through each node
+	// use a for loop using the get terms function to loop through each node    
+	
 	// create a vector of ints for the degrees
 	// "                " doubles for the ceffs 
 	// create a new polynomial using poly constructor
