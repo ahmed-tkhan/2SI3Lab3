@@ -38,22 +38,20 @@ Poly::~Poly()
 {
 	// TODO
 	// reach out to a buddy and check again how to delete a SLL or delete a polyNode
-	PolyNode* nodeHead = this->getHead();
+	//PolyNode* nodeHead = this->getHead();
 	PolyNode* temp;
 
 
-
-	while (nodeHead != NULL)
+	while (this->head->next != NULL)
 	{
-		
-		temp = nodeHead;
-		nodeHead = nodeHead->next;
-		//free(temp);
-		
-			 
+		temp = this->head;
+		this->head = this->head->next;
+		//delete(temp);
 		
 	}
 
+
+	
 }
 
 void Poly::addMono(int i, double c)
