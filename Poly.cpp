@@ -39,13 +39,20 @@ Poly::~Poly()
 	// TODO
 	// reach out to a buddy and check again how to delete a SLL or delete a polyNode
 	PolyNode* nodeHead = this->head;
+	PolyNode* temp;
 
 
-	while (nodeHead != NULL)
+	while (nodeHead->next != NULL)
 	{
-		PolyNode* tmp = nodeHead;
-		nodeHead = nodeHead->next;
-		delete tmp;
+		try {
+			temp = nodeHead;
+			nodeHead = nodeHead->next;
+			if (temp != NULL) { free(temp); }
+		}
+		catch (std::exception e) {
+			std::cout << e.what() << std::endl;
+		}
+		
 	}
 
 }
@@ -118,20 +125,19 @@ void Poly::addPoly(const Poly& p)
 {
 	// TODO
 	Poly passed = p;
-	PolyNode pHead = *passed.getHead();
+	PolyNode* pHead = passed.getHead();
 	
 	//while loop to loop through poly p for each mononomial in this polynomial
 	//1st condition: next ptr != NULL(to run through Poly p)
-	while (pHead.next!=NULL) {
-		double c = pHead.coeff;
-		int d = pHead.deg;
-		this->addMono(c,d);
-		pHead = *pHead.next;
-		
+	while (pHead->next!=NULL) {
+		pHead = pHead->next;
+		double c = pHead->coeff;
+		int d = pHead->deg;
+		this->addMono(d,c);
 	}
-	deleteZeroMono();
-	updateDegree();
-		
+
+	update();
+	
 
 }
 
