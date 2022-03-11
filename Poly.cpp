@@ -40,16 +40,15 @@ Poly::~Poly()
 	// reach out to a buddy and check again how to delete a SLL or delete a polyNode
 	PolyNode* nodeHead = this->getHead();
 	PolyNode* temp;
-	PolyNode* freedMem = new PolyNode(NULL,NULL,NULL);
-	free(freedMem);
 
 
-	while (nodeHead != NULL && nodeHead->next != freedMem->next)
+
+	while (nodeHead != NULL)
 	{
 		
 		temp = nodeHead;
 		nodeHead = nodeHead->next;
-		free(temp);
+		//free(temp);
 		
 			 
 		
@@ -66,10 +65,13 @@ void Poly::addMono(int i, double c)
 	//while loop to loop through the SLL
 	PolyNode* current = this->getHead();
 
+
 	//condition: next ptr != NULL, and the deg is still bigger than the current deg of the node
 	while (current->next != NULL && current->next->deg > i) {
+		//run through all of the nodes w/ a larger deg
 		current = current->next;
 	}
+	
 
 	//new node/mononomial
 	if (current->next == NULL) {
@@ -89,37 +91,8 @@ void Poly::addMono(int i, double c)
 	}
 
 	update();
+}//theta(n)
 
-
-
-}
-
-void Poly::deleteZeroMono() {
-	//check to see if mononomial coeff is non-zero
-	//while loop to loop through the SLL
-	PolyNode* currentNode = this->getHead();
-
-	//no header so exit
-	if (currentNode->next ==  NULL) { return; }
-
-	//condition: next ptr != NULL, and the deg is still bigger than the current deg of the node
-	while (currentNode->next != NULL) {
-		if (currentNode->next->coeff == 0) {
-			
-			PolyNode* tmp = currentNode->next->next;
-			free(currentNode->next);
-			currentNode->next = tmp;
-			//decrement number of terms by 1
-			this->numTerms--;
-
-			
-		}
-		currentNode = currentNode->next;
-		//std::cout << std::to_string(currentNode->coeff) << std::endl;
-		if (currentNode == NULL) { return; }
-
-	}
-}
 
 void Poly::addPoly(const Poly& p)
 {
@@ -139,7 +112,7 @@ void Poly::addPoly(const Poly& p)
 	update();
 	
 	return;
-}
+}//theta(n^2)
 
 void Poly::multiplyMono(int i, double c)
 {
@@ -155,7 +128,7 @@ void Poly::multiplyMono(int i, double c)
 		{
 			tmp = nodeHead->next;
 			nodeHead->next = nodeHead->next->next;
-			free(tmp);
+			//free(tmp);
 		}
 		
 		update();
@@ -164,46 +137,52 @@ void Poly::multiplyMono(int i, double c)
 	}
 	// while loop to loop through this poly 
 	// condition: next ptr != NULL(to run through this Poly)
-	//multiply each node's coeff by c, and add i to the degree
 	while (currentNode->next != NULL) {
+		//multiply each node's coeff by c, and add i to the degree
 		currentNode->next->coeff = (currentNode->next->coeff) * c;
 		currentNode->next->deg = (currentNode->next->deg) + i;
 		currentNode = currentNode->next;
 	}
 	update();
 
-}
+}//theta(n)
 
 void Poly::multiplyPoly(const Poly& p)
 {
-	// TODO
-
- 	// While loop to create the vector/array of duplicate polynomials of poly P
-	// 
+	Poly* thisCopy = new Poly();
+	// copy this poly
+	this->duplicate(*thisCopy);										
+	//get negative version of this copy
+	thisCopy->multiplyMono(0, -1);
+	//add this copy to this to empty this poly
+	this->addPoly(*thisCopy);
+	//flip the sign of this copy again
+	thisCopy->multiplyMono(0, -1);
+	
 	// While loop to run through each node in this polynomial
-	// we will multiply each monomomial in this Poly by the whole poly P and store it in a vector/array of polynomials
-	// note multiplying a polynomial by a mononomial means that the original poly is modified
+	Poly passed = p;
+	PolyNode* pHead = passed.getHead();
+	while (pHead->next != NULL) {
+		int d = pHead->next->deg;
+		double c = pHead->next->coeff;
+		// we will multiply each monomomial in Poly p by this copy and store it in original this poly
+		Poly* thisCopyCopy = new Poly();
+		thisCopy->duplicate(*thisCopyCopy);							//n
+		thisCopyCopy->multiplyMono(d, c);							//n
+		//add the products of the mononomials and the polynomials
+		this->addPoly(*thisCopyCopy);								//n*m
+		//next node
+		pHead = pHead->next;
+	}
 
-	// While loop to empty this polynomial and then we will then add each of resulting polynomials
-
-	//NOTE: need to create, duplicate, monoMultiply, addPoly
-	//lol this is a really slow alghorithm and I get the feeling that this is wrong
 
 }
 
 void Poly::duplicate(Poly& outputPoly)
 {
 	// TODO
-
-	// use a for loop using the get terms function to loop through each node    
+	//add the entirety of this to outpoly
 	outputPoly.addPoly(*this);
-	// create a vector of ints for the degrees
-	// "                " doubles for the ceffs 
-	
-	
-	 
-	// create a new polynomial using poly constructor
-
 
 }
 
@@ -261,6 +240,34 @@ std::string Poly::toString()
 	return answer;		//change this after completing this function
 }
 
+void Poly::deleteZeroMono() {
+	//check to see if mononomial coeff is non-zero
+	//while loop to loop through the SLL
+	PolyNode* currentNode = this->getHead();
+
+	//no header so exit
+	if (currentNode->next == NULL) { return; }
+
+	//condition: next ptr != NULL, and the deg is still bigger than the current deg of the node
+	while (currentNode->next != NULL) {
+		while (currentNode->next != NULL && currentNode->next->coeff == 0) {
+
+			PolyNode* tmp = currentNode->next;
+			currentNode->next = currentNode->next->next;
+			//free(tmp);
+			//decrement number of terms by 1
+			this->numTerms--;
+
+
+		}
+		//std::cout << std::to_string(currentNode->coeff) << std::endl;
+		if (currentNode == NULL || currentNode->next == NULL) { return; }
+		currentNode = currentNode->next;
+
+
+	}
+}//theta(n)
+
 
 void Poly::updateDegree() {
 	//empty poly
@@ -272,7 +279,7 @@ void Poly::updateDegree() {
 	if (this->getDegree() != this->getHead()->next->deg) {
 		this->deg = this->getHead()->next->deg;
 	}
-}
+}//theta(1)
 
 void Poly::updateTerms() {
 	int counter = 0;
@@ -282,11 +289,11 @@ void Poly::updateTerms() {
 		temp = temp->next;
 	}
 	this->numTerms = counter;
-}
+}//theta(n)
 
 void Poly::update() {
 	deleteZeroMono();
 	updateDegree();
 	updateTerms();
-}
+}//theta(n)
 
