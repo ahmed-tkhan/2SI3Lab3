@@ -196,9 +196,12 @@ void Poly::duplicate(Poly& outputPoly)
 	// TODO
 
 	// use a for loop using the get terms function to loop through each node    
-	
+	outputPoly.addPoly(*this);
 	// create a vector of ints for the degrees
 	// "                " doubles for the ceffs 
+	
+	
+	 
 	// create a new polynomial using poly constructor
 
 
