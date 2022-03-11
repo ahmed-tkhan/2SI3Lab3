@@ -204,14 +204,13 @@ double Poly::evaluate(double x)
 
 	
 	
-	PolyNode* head = this->head->next;
+	PolyNode* nodeHead = this->head;
 	double total = 0;
 
-	do {
-		total += head->coeff * pow(x, head->deg);
-		head = head->next;
-	}
-	while (head != NULL)
+	while (nodeHead->next != NULL){
+		total += nodeHead->next->coeff * pow(x, nodeHead->next->deg);
+		nodeHead = nodeHead->next;
+	} 
 	
 	//Example: If this polynomial is P (X) = 4X3 + 5X + 2, then the invocation
 	//evaluate(2.0) returns the value 4 * 2.03 + 5 * 2.0 + 2 = 44.0
