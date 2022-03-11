@@ -29,6 +29,9 @@ public:
 	std::string toString();
 	
 	void deleteZeroMono();
+	void updateDegree();
+	void updateTerms();
+	void update();
 
 
 
