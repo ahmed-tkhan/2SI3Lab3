@@ -202,10 +202,15 @@ double Poly::evaluate(double x)
 {
 	// TODO
 
-	// for loop to loop through each node
-	// get the coeff and deg
-	// multiply the coeff by the x to the power of the deg
-	// add the answer 
+	
+	double total = 0;
+	PolyNode* head = this->head->next;
+
+	while (head != NULL) {
+		total += head->coeff * pow(x, head->deg);
+		head = head->next;
+
+	}
 	
 	//Example: If this polynomial is P (X) = 4X3 + 5X + 2, then the invocation
 	//evaluate(2.0) returns the value 4 * 2.03 + 5 * 2.0 + 2 = 44.0
